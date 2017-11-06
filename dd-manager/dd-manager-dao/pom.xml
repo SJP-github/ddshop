@@ -29,7 +29,7 @@
             <artifactId>mybatis-spring</artifactId>
         </dependency>
 
-        <!-- mysql -->
+        <!-- mysql 连接包 -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>

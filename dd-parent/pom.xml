@@ -61,6 +61,7 @@
     <!--依赖的声明-->
     <dependencyManagement>
         <dependencies>
+
             <!--jsp相关三个依赖-->
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -157,7 +158,7 @@
                 <artifactId>quartz</artifactId>
                 <version>${quartz.version}</version>
             </dependency>
-            <!-- 单元测试 -->
+            <!-- 单元测试 使用4.0版本 -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
