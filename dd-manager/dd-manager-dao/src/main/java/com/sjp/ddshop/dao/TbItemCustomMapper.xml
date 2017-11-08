@@ -5,14 +5,20 @@
 
     <sql id="Base_Column_List" >
         i.id, i.title, i.sell_point as sellPoint, i.price,
-        i.num, i.barcode, i.image, i.cid, i.status, i.created, i.updated,
-        c.name as catName
+        i.num, i.barcode, i.image, i.cid, i.status, i.created,
+        c.name as catName,DATE_FORMAT(i.updated,'%Y-%m-%d/%H:%i:%s') as updatedFormat,
+        CASE i.status
+                when 1 then "正常"
+                when 2 then "下架"
+                when 3 then "删除"
+            else "未知" END as statusName
+
     </sql>
 
      <!--查询总数量-->
      <select id="countItems" resultType="_int" >
          select count(1)
-         from tb_item
+         from tb_item where status!=3
      </select>
 
      <!--分页查询-->
@@ -20,8 +26,8 @@
         SELECT
         <include refid="Base_Column_List" />
         FROM tb_item i
-        LEFT JOIN tb_item_cat c
-        ON i.cid = c.id
+        LEFT JOIN tb_item_cat c ON i.cid = c.id
+        where i.status !=3
         ORDER BY i.id DESC
         LIMIT #{offset},#{rows}
     </select>

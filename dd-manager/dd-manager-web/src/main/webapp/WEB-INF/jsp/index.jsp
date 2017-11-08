@@ -8,8 +8,10 @@
     <!-- 导入easyui的样式表 -->
     <link rel="stylesheet" href="js/jquery-easyui-1.5/themes/bootstrap/easyui.css">
     <link rel="stylesheet" href="js/jquery-easyui-1.5/themes/icon.css">
+    <%--引入common.css：上架下架图标--%>
     <link rel="stylesheet" href="css/common.css">
 </head>
+
 <%--layout组件--%>
 <body class="easyui-layout">
 <div data-options="region:'north'" style="height:70px;padding-left:10px;">
@@ -42,6 +44,7 @@
         </div>
     </div>
 </div>
+<%--选项卡--%>
 <div data-options="region:'center'" style="background:#eee;">
     <div id="tab" class="easyui-tabs" data-options="fit:true">
         <div title="欢迎页面" style="padding:20px;">千锋欢迎你</div>
@@ -53,11 +56,16 @@
 <script src="js/jquery-easyui-1.5/jquery.easyui.min.js"></script>
 <script src="js/jquery-easyui-1.5/locale/easyui-lang-zh_CN.js"></script>
 
-
+<%--引入日期处理类库--%>
+<script src="js/moment/moment-with-locales.js"></script>
+<script>
+    moment.locale('zh-cn');
+</script>
 <!-- 自定义脚本 -->
 <script src="js/common.js"></script>
 <!-- 自定义js -->
 <script>
+//    注册菜单事件
     ddshop.registerMenuEvent();
 </script>
 </body>

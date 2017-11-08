@@ -15,4 +15,10 @@ public interface ItemService {
 
     //分页查询
     Result<TbItemCustom> listItemsByPage(Page page);
+
+    int updateItemsByIds(List<Long> ids);
+
+    int updateItemsUpByIds(List<Long> ids);
+
+    int updateItemDownByids(List<Long> ids);
 }
