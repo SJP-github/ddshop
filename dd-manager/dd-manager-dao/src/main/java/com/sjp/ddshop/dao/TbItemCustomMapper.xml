@@ -12,24 +12,44 @@
                 when 2 then "下架"
                 when 3 then "删除"
             else "未知" END as statusName
+    </sql>
 
+    <sql id="Where_Clause">
+        <where>
+            i.status!=3
+            <if test="query!=null and query.title !=null and query.title!=''">
+                and i.title like '%${query.title}%'
+            </if>
+            <if test="query!=null and query.status !=null and query.status!=0">
+                and i.status=#{query.status}
+            </if>
+
+        </where>
     </sql>
 
      <!--查询总数量-->
      <select id="countItems" resultType="_int" >
-         select count(1)
-         from tb_item where status!=3
+         select count(1) from tb_item i
+         <include refid="Where_Clause"/>
      </select>
 
      <!--分页查询-->
-    <select id="listItemsByPage" parameterType="com.sjp.ddshop.common.dto.Page" resultType="com.sjp.ddshop.pojo.vo.TbItemCustom">
+    <select id="listItemsByPage" resultType="com.sjp.ddshop.pojo.vo.TbItemCustom">
         SELECT
         <include refid="Base_Column_List" />
         FROM tb_item i
         LEFT JOIN tb_item_cat c ON i.cid = c.id
-        where i.status !=3
-        ORDER BY i.id DESC
-        LIMIT #{offset},#{rows}
+        <include refid="Where_Clause"/>
+        <choose>
+            <when test="order!=null and order.sort!=null and order.order!=null">
+                <foreach collection="order.orderParams" item="item"
+                         open="ORDER BY" separator="," close="">
+                          i.${item}
+                </foreach>
+            </when>
+            <!--<otherwise>ORDER BY convert(i.title using gbk)</otherwise>-->
+        </choose>
+        LIMIT #{page.offset},#{page.rows}
     </select>
 
 </mapper>

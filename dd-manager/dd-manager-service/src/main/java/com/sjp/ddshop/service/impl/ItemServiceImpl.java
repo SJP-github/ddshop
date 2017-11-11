@@ -1,5 +1,6 @@
 package com.sjp.ddshop.service.impl;
 
+import com.sjp.ddshop.common.dto.Order;
 import com.sjp.ddshop.common.dto.Page;
 import com.sjp.ddshop.common.dto.Result;
 import com.sjp.ddshop.dao.TbItemCustomMapper;
@@ -7,12 +8,16 @@ import com.sjp.ddshop.dao.TbItemMapper;
 import com.sjp.ddshop.pojo.po.TbItem;
 import com.sjp.ddshop.pojo.po.TbItemExample;
 import com.sjp.ddshop.pojo.vo.TbItemCustom;
+import com.sjp.ddshop.pojo.vo.TbItemQuery;
 import com.sjp.ddshop.service.ItemService;
+import javafx.beans.binding.ObjectExpression;
 import org.springframework.beans.PropertyAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ItemServiceImpl implements ItemService {
@@ -32,16 +37,21 @@ public class ItemServiceImpl implements ItemService {
 
 //    分页查询
 @Override
-public Result<TbItemCustom> listItemsByPage(Page page) {
+public Result<TbItemCustom> listItemsByPage(Page page, Order order, TbItemQuery query) {
     Result<TbItemCustom> result = null;
     try {
+
+        Map<String, Object> map = new HashMap<String,Object>();
+        map.put("page", page);
+        map.put("order", order);
+        map.put("query", query);
         //1 创建一个响应参数实体类
         result = new Result<TbItemCustom>();
         //2 对total进行设值(符合条件的总记录数)
-        int total = itemCustomDao.countItems();
+        int total = itemCustomDao.countItems(map);
         result.setTotal(total);
         //3 对rows进行设值(指定页码显示记录集合)
-        List<TbItemCustom> list = itemCustomDao.listItemsByPage(page);
+        List<TbItemCustom> list = itemCustomDao.listItemsByPage(map);
         result.setRows(list);
     }catch (Exception e) {
         e.printStackTrace();
@@ -61,7 +71,9 @@ public Result<TbItemCustom> listItemsByPage(Page page) {
             //创建更新模板--update tb_item set status=? where id in(?,?,?)
             TbItemExample exmaple = new TbItemExample();
             TbItemExample.Criteria criteria = exmaple.createCriteria();
+
             criteria.andIdIn(ids);
+
             i = itemDao.updateByExampleSelective(record, exmaple);
         } catch (Exception e) {
             e.printStackTrace();

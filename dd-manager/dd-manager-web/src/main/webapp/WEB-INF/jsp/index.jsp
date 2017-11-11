@@ -50,6 +50,9 @@
         <div title="欢迎页面" style="padding:20px;">千锋欢迎你</div>
     </div>
 </div>
+
+
+
 <!-- jquery#注意一定先加载jquery再加载easyUI -->
 <script src="js/jquery-easyui-1.5/jquery.min.js"></script>
 <!-- jquery easyui -->

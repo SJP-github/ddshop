@@ -1,5 +1,10 @@
 package com.sjp.ddshop.common.dto;
 
+/*
+   分页：
+   param: page  当前页
+   param: rows  每页数据量
+ */
 public class Page {
 
 //    当前页
