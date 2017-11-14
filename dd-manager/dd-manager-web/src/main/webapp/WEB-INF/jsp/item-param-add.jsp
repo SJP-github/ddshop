@@ -96,6 +96,31 @@
         $(ele).parent().remove();
     }
 
+    //保存
+    function submitForm() {
+
+        //先取出所有组
+        var $groups=$('#item-param-group [name=group]');
+        //遍历分组
+        $groups.each(function (index,ele) {
+             //遍历分组项
+
+            var paramValues=[];
+            var $params=$(ele).parent().find(".item-param [name=param]");
+            //遍历参数项
+            $params.each(function (_index,_ele) {
+                var _val=$(_ele).val();
+                if($.trim(_val).length>0) {
+                    paramValues.push(_val);
+                }
+            })
+
+        })
+
+
+
+    }
+
 
 
 </script>
