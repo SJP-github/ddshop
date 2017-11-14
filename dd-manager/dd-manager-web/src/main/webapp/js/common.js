@@ -6,16 +6,14 @@ var ddshop = {
     registerMenuEvent: function () {
 
         var _this = this;
-        console.log(_this)
-
         // 使用tree组件
         $("#menu .easyui-tree").tree({
             //节点
             onClick: function (node) {
-                console.log(this);
+                //console.log(this);
                 var href = node.attributes.href;
                 var text = node.text;
-                _this.addTabs(text, href);
+                _this.addTabs(text,href);
             }
         })
     },
@@ -33,8 +31,11 @@ var ddshop = {
 
 
         }
+    },
+    closeTabs:function (title) {
+        $('#tab').tabs('close',title);
     }
-}
+};
 
 
 

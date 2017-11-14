@@ -3,18 +3,21 @@ package com.sjp.ddshop.service.impl;
 import com.sjp.ddshop.common.dto.Order;
 import com.sjp.ddshop.common.dto.Page;
 import com.sjp.ddshop.common.dto.Result;
+import com.sjp.ddshop.common.util.IDUtils;
 import com.sjp.ddshop.dao.TbItemCustomMapper;
+import com.sjp.ddshop.dao.TbItemDescMapper;
 import com.sjp.ddshop.dao.TbItemMapper;
 import com.sjp.ddshop.pojo.po.TbItem;
+import com.sjp.ddshop.pojo.po.TbItemDesc;
 import com.sjp.ddshop.pojo.po.TbItemExample;
 import com.sjp.ddshop.pojo.vo.TbItemCustom;
 import com.sjp.ddshop.pojo.vo.TbItemQuery;
 import com.sjp.ddshop.service.ItemService;
-import javafx.beans.binding.ObjectExpression;
-import org.springframework.beans.PropertyAccessException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +30,9 @@ public class ItemServiceImpl implements ItemService {
     private TbItemMapper itemDao;
     @Autowired
     private TbItemCustomMapper itemCustomDao;
+    @Autowired
+    private TbItemDescMapper itemDescDao;
+
 
     @Override
     public TbItem getById(Long itemid) {
@@ -59,7 +65,33 @@ public Result<TbItemCustom> listItemsByPage(Page page, Order order, TbItemQuery 
     return result;
 }
 
-//批量删除（update）
+    //新增商品
+    @Override
+    @Transactional     //加上注解之后变成事物方法
+    public int addItem(TbItem tbItem, String content) {
+        int i=0;
+        try {
+            //处理tb_item
+            Long itemId=IDUtils.getItemId();
+            tbItem.setId(itemId);
+            tbItem.setStatus((byte) 2);
+            tbItem.setCreated(new Date());
+            tbItem.setUpdated(new Date());
+            i=itemDao.insertSelective(tbItem);
+            //处理tb_item_desc
+            TbItemDesc desc =new TbItemDesc();
+            desc.setItemId(itemId);
+            desc.setItemDesc(content);
+            desc.setCreated(new Date());
+            desc.setUpdated(new Date());
+            i+=itemDescDao.insertSelective(desc);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+    //批量删除（update）
     @Override
     public int updateItemsByIds(List<Long> ids) {
 

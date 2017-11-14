@@ -7,6 +7,8 @@ import com.sjp.ddshop.pojo.po.TbItem;
 import com.sjp.ddshop.pojo.vo.TbItemCustom;
 import com.sjp.ddshop.pojo.vo.TbItemQuery;
 import com.sjp.ddshop.service.ItemService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,8 @@ import java.util.List;
 @Controller
 @Scope("prototype")
 public class ItemAction {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
     @Autowired
@@ -42,6 +46,7 @@ public class ItemAction {
         try {
             list = itemService.listItemsByPage(page,order,query);
         }catch (Exception e) {
+            logger.error(e.getMessage(),e);
             e.printStackTrace();
         }
         return list;
@@ -56,6 +61,7 @@ public class ItemAction {
         try {
             i=itemService.updateItemsByIds(ids);
         }catch (Exception e){
+            logger.error(e.getMessage(),e);
             e.printStackTrace();
         }
         return i;
@@ -71,6 +77,7 @@ public class ItemAction {
         try {
             i = itemService.updateItemsUpByIds(ids);
         } catch (Exception e) {
+            logger.error(e.getMessage(),e);
             e.printStackTrace();
         }
 
@@ -86,6 +93,22 @@ public class ItemAction {
         try {
             i = itemService.updateItemDownByids(ids);
         } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+            e.printStackTrace();
+        }
+        return i;
+    }
+
+
+    //保存商品
+    @ResponseBody
+    @RequestMapping("/item")
+    public int saveItem(TbItem tbItem,String content){
+        int i=0;
+        try {
+            i=itemService.addItem(tbItem,content);
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
             e.printStackTrace();
         }
         return i;

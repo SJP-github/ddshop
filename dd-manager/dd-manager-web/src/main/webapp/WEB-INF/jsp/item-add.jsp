@@ -81,17 +81,32 @@
 </div>
 
 <script>
+
+    //初始化之前删除原有的容器
+    UE.delEditor('container')
+
+    //富文本编辑器
+    var ue = UE.getEditor('container',{
+        initialFrameWidth: '100%',
+        initialFrameHeight: '400'
+    });
+
+
+    //加载商品类目树型下拉框
     $("#cid").combotree({
         url:'itemCats?parentid=0',
         required:true,
+        //展开前
         onBeforeExpand: function (node) {
             //获取当前被点击的tree
             var $currentTree = $('#cid').combotree('tree');
             //调用easyui tree组件的options方法
+                                             //返回树控件属性#无参数
             var option = $currentTree.tree('options');
             //修改option的url属性
-            option.url = 'itemCats?parentId=' + node.id;
+            option.url = 'itemCats?parentid=' + node.id;
         },
+        //叶子节点选择前
         onBeforeSelect: function (node) {
             //判断选中节点是否为叶子节点，如果是，返回true
             var isLeaf = $('#cid').tree('isLeaf', node.target);
@@ -100,7 +115,37 @@
                 $.messager.alert('警告', '请选中最终的类别！', 'warning');
                 return false;
             }
-
         }
     })
+
+    //保存商品
+    function submitForm() {
+        $("#itemAddForm").form('submit',{
+            url:'item',
+            //提交之前触发，返回false不触发
+            onSubmit:function () {
+                //将表单上的价格从元转化为分
+                $('#price').val($('#priceView').val() * 100);
+                return $(this).form('validate');
+
+            },
+            //成功之后的回到函数
+            success:function(data){
+                console.log(data);
+                if(data>0){
+                    $.messager.alert('消息','保存成功！','info');
+                    ddshop.addTabs('查询商品', 'item-list');
+                }
+
+            }
+        })
+
+    }
+
+    function clearForm() {
+        $('#itemAddForm').form('reset');
+        ue.setContent('商品描述');
+    }
+
+
 </script>

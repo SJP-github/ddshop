@@ -71,5 +71,10 @@
 //    注册菜单事件
     ddshop.registerMenuEvent();
 </script>
+
+<!-- 配置文件 -->
+<script src="js/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script src="js/ueditor/ueditor.all.js"></script>
 </body>
 </html>
