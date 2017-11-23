@@ -52,7 +52,6 @@
 </div>
 
 
-
 <!-- jquery#注意一定先加载jquery再加载easyUI -->
 <script src="js/jquery-easyui-1.5/jquery.min.js"></script>
 <!-- jquery easyui -->
@@ -66,15 +65,31 @@
 </script>
 <!-- 自定义脚本 -->
 <script src="js/common.js"></script>
-<!-- 自定义js -->
-<script>
-//    注册菜单事件
-    ddshop.registerMenuEvent();
-</script>
+
 
 <!-- 配置文件 -->
 <script src="js/ueditor/ueditor.config.js"></script>
 <!-- 编辑器源码文件 -->
 <script src="js/ueditor/ueditor.all.js"></script>
+
+
+<!-- 自定义js -->
+<script>
+    //    注册菜单事件
+    ddshop.registerMenuEvent();
+</script>
+<%--多图片上传--%>
+<script>
+    UE.Editor.prototype._bkGetActionUrl = UE.Editor.prototype.getActionUrl;
+    UE.Editor.prototype.getActionUrl = function (action) {
+        if (action == 'uploadimage') {
+            return 'http://localhost:8080/ddshop/file/upload';
+        } else {
+            return this._bkGetActionUrl.call(this, action);
+        }
+    }
+</script>
+
+
 </body>
 </html>

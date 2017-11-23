@@ -88,8 +88,11 @@
     //富文本编辑器
     var ue = UE.getEditor('container',{
         initialFrameWidth: '100%',
-        initialFrameHeight: '400'
+        initialFrameHeight: '400',
+        serverUrl:'file/upload'
+
     });
+
 
 
     //加载商品类目树型下拉框
@@ -114,9 +117,53 @@
             if (!isLeaf) {
                 $.messager.alert('警告', '请选中最终的类别！', 'warning');
                 return false;
+            }else{
+                //如果是叶子节点,发送ajax请求查询tb_item_param表，将规格参数拼接到商品新增页面
+                $.get(
+                  //url
+                  'itemParam/query/'+node.id,
+                  //success
+                  function (data) {
+                      var $outerTd=$('#itemAddForm .paramsShow td').eq(1);
+                      var $ul=$('<ul>');
+                      $outerTd.empty().append($ul);
+                      if (data) {
+                          var paramData=data.paramData;
+                          paramData=JSON.parse(paramData);
+                          //遍历分组
+                          $.each(paramData,function (i,e) {
+                              var groupName=e.group;
+                              var $li=$('<li>');
+                              var $table=$('table');
+                              var $tr=$('<tr>');
+                              var $td=$('<td colspan="2" class="group">'+groupName+'</td>');
+
+                              $ul.append($li);
+                              $li.append($table);
+                              $table.append($tr);
+                              $tr.append($td);
+
+                              //遍历分组项
+                              if(e.params){
+                                  $.each(e.params,function (_i,paramName) {
+                                      var _$tr=$('<tr><td class="param">'+paramName+
+                                      '</td><td><input></td></tr>');
+                                      $table.append(_$tr);
+                                  });
+                              }
+
+                          });
+                          $("#itemAddForm .paramsShow").show();
+                      }else{
+                          $("#itemAddForm .paramsShow").hide();
+                          $("#itemAddForm .paramsShow td").eq(1).empty();
+                      }
+                  }
+                );
+
             }
         }
-    })
+    });
 
     //保存商品
     function submitForm() {

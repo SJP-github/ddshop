@@ -13,7 +13,9 @@
             <tr>
                 <td class="label">规格参数：</td>
                 <td>
-                    <button class="easyui-linkbutton" onclick="addGroup()" type="button" data-options="iconCls:'icon-add'">添加分组</button>
+                    <button class="easyui-linkbutton" onclick="addGroup()" type="button"
+                            data-options="iconCls:'icon-add'">添加分组
+                    </button>
                     <ul id="item-param-group">
 
                     </ul>
@@ -22,13 +24,16 @@
                     <ul id="item-param-group-template" style="display:none;">
                         <li>
                             <input name="group">
-                            <button title="添加参数" class="easyui-linkbutton" onclick="addParam(this)" type="button" data-options="iconCls:'icon-add'"></button>
-                            <button title="删除分组" class="easyui-linkbutton" onclick="delGroup(this)" type="button" data-options="iconCls:'icon-cancel'"></button>
+                            <button title="添加参数" class="easyui-linkbutton" onclick="addParam(this)" type="button"
+                                    data-options="iconCls:'icon-add'"></button>
+                            <button title="删除分组" class="easyui-linkbutton" onclick="delGroup(this)" type="button"
+                                    data-options="iconCls:'icon-cancel'"></button>
 
                             <ul class="item-param">
                                 <li>
                                     <input name="param">
-                                    <button title="删除参数" class="easyui-linkbutton" onclick="delParam(this)" type="button" data-options="iconCls:'icon-cancel'"></button>
+                                    <button title="删除参数" class="easyui-linkbutton" onclick="delParam(this)"
+                                            type="button" data-options="iconCls:'icon-cancel'"></button>
                                 </li>
 
                             </ul>
@@ -38,8 +43,12 @@
             </tr>
             <tr>
                 <td colspan="2">
-                    <button class="easyui-linkbutton" onclick="submitForm()" type="button" data-options="iconCls:'icon-ok'">保存</button>
-                    <button class="easyui-linkbutton" onclick="clearForm()" type="button" data-options="iconCls:'icon-undo'">重置</button>
+                    <button class="easyui-linkbutton" onclick="submitForm()" type="button"
+                            data-options="iconCls:'icon-ok'">保存
+                    </button>
+                    <button class="easyui-linkbutton" onclick="clearForm()" type="button"
+                            data-options="iconCls:'icon-undo'">重置
+                    </button>
                 </td>
             </tr>
         </table>
@@ -73,9 +82,10 @@
         }
     })
 
+
     //添加组
     function addGroup() {
-        $templateLi=$('#item-param-group-template li').eq(0).clone();
+        $templateLi = $('#item-param-group-template li').eq(0).clone();
         $('#item-param-group').append($templateLi);
     }
 
@@ -85,8 +95,8 @@
     }
 
     //添加参数
-    function addParam(ele){
-        $paramLi=$('#item-param-group-template .item-param li').eq(0).clone();
+    function addParam(ele) {
+        $paramLi = $('#item-param-group-template .item-param li').eq(0).clone();
         $(ele).parent().find('.item-param').append($paramLi);
 
     }
@@ -99,28 +109,54 @@
     //保存
     function submitForm() {
 
-        //先取出所有组
-        var $groups=$('#item-param-group [name=group]');
-        //遍历分组
-        $groups.each(function (index,ele) {
-             //遍历分组项
+        var groupValues=[];
 
-            var paramValues=[];
-            var $params=$(ele).parent().find(".item-param [name=param]");
+        //先取出所有组
+        var $groups = $('#item-param-group [name=group]');
+        //遍历分组
+        $groups.each(function (index, ele) {
+            //遍历分组项
+
+            var paramValues = [];
+            var $params = $(ele).parent().find(".item-param [name=param]");
             //遍历参数项
-            $params.each(function (_index,_ele) {
-                var _val=$(_ele).val();
-                if($.trim(_val).length>0) {
+            $params.each(function (_index, _ele) {
+                var _val = $(_ele).val();
+                if ($.trim(_val).length > 0) {
                     paramValues.push(_val);
                 }
-            })
+            });
 
-        })
+            //把group合param封装到一起
+            var val = $(ele).val();  //group的值
+            var o = {};
+            o.group = val;
+            o.params = paramValues;
 
+            if($.trim(val).length>0&&paramValues.length>0) {
+                //得到封装好的规格参数json
+                groupValues.push(o);
+            }
 
+        });
+
+        //发送ajax请求保存数据
+        var cid=$('#cid').combotree('getValue');
+        var url='item/param/save/'+cid;
+        var jsonStr=JSON.stringify(groupValues)
+        $.post(
+            url,
+            {paramData:jsonStr},
+            function (data) {
+                console.log(data);
+                if(data>0){
+                    $.messager.alert('消息','保存成功！','info');
+                    ddshop.addTabs('规格参数', 'itemParams');
+                }
+            }
+        )
 
     }
-
 
 
 </script>

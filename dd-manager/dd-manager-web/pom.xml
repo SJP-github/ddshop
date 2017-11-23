@@ -18,6 +18,21 @@
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
+
+        <!--富文本编辑器蹄片上传-->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baidu</groupId>
+            <artifactId>ueditor</artifactId>
+        </dependency>
+        <!--json-->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
         <!-- 文件上传组件 -->
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -52,7 +67,11 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency>
-
+        <!--io-->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
 
 
     </dependencies>
