@@ -45,6 +45,11 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--字符串处理包-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
 
 

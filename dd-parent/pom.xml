@@ -13,6 +13,8 @@
         <module>../dd-manager</module>
         <module>../dd-upload</module>
         <module>../dd-search-web</module>
+        <module>../dd-portal-web</module>
+        <module>../dd-activemq</module>
     </modules>
 
     <!--打包方式，默认为jar-->

@@ -1,8 +1,11 @@
 package com.sjp.ddshop.service.impl;
 
+import com.sjp.ddshop.dao.SearchItemDao;
 import com.sjp.ddshop.dao.TbItemSearchCustomMapper;
 import com.sjp.ddshop.pojo.vo.TbItemSearchCustom;
+import com.sjp.ddshop.pojo.vo.TbSearchItemResult;
 import com.sjp.ddshop.service.SearchItemService;
+import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
@@ -19,6 +22,9 @@ public class SearchItemServiceImpl implements SearchItemService {
     private TbItemSearchCustomMapper tbItemSearchCustomDao;
     @Autowired
     private SolrServer solrServer;
+    @Autowired
+    private SearchItemDao searchItemDao;
+    
     
     
     @Override
@@ -57,5 +63,33 @@ public class SearchItemServiceImpl implements SearchItemService {
         }
         return true;
     }
+    
+    
+    @Override
+    public TbSearchItemResult search(String keyword, Integer page, int rows) {
+        //创建一个SolrQuery对象
+        SolrQuery query = new SolrQuery();
+        //设置查询条件
+        query.setQuery(keyword);
+        //设置分页条件
+        if(page<=0) page=1;
+        query.setStart((page - 1) * rows);
+        query.setRows(rows);
+        //设置默认搜索域
+        query.set("df", "item_keywords");
+        //开启高亮显示
+        query.setHighlight(true);
+        query.addHighlightField("item_title");
+        query.setHighlightSimplePre("<em style=\"color:red\">");
+        query.setHighlightSimplePost("</em>");
+        //调用dao调查
+        TbSearchItemResult searchResult = searchItemDao.search(query);
+        //计算总页数
+        long recordCount=searchResult.getRecordCount();
+        int totalPage=(int)((recordCount+rows-1)/rows);
+        //添加到返回结果
+        searchResult.setTotalPages(totalPage);
+        return searchResult;
     }
+}
 
